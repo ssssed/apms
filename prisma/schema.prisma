@@ -19,7 +19,7 @@ enum Role {
 }
 
 model User {
-  id       Int      @id
+  id       Int      @id @default(autoincrement())
   role     Role     @default(USER)
   name     String
   email    String   @unique
@@ -35,7 +35,7 @@ model User {
 }
 
 model Tag {
-  id    Int    @id
+  id    Int    @id @default(autoincrement())
   name  String
   color String
 
@@ -45,7 +45,7 @@ model Tag {
 }
 
 model Project {
-  id          Int     @id
+  id          Int     @id @default(autoincrement())
   name        String
   description String?
 
@@ -65,7 +65,7 @@ enum NotificationStates {
 }
 
 model Notification {
-  id       Int                @id
+  id       Int                @id @default(autoincrement())
   status   NotificationStates @default(Created)
   message  String
   createAt DateTime           @default(now()) @map("create_at")
@@ -85,7 +85,7 @@ enum TaskStatus {
 }
 
 model Task {
-  id          Int        @id
+  id          Int        @id @default(autoincrement())
   title       String
   description String?
   status      TaskStatus
@@ -100,7 +100,7 @@ model Task {
 }
 
 model TaskComment {
-  id      Int    @id
+  id      Int    @id @default(autoincrement())
   message String
 
   Task     Task? @relation(fields: [taskId], references: [id])
