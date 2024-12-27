@@ -1,6 +1,7 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
 import { Page } from "~/shared/ui/page";
+import { ProtectRoute } from "./protect-router";
 
 export default function ProtectedLayout({
   children,
@@ -9,12 +10,14 @@ export default function ProtectedLayout({
 }>) {
   return (
     <SessionProvider>
-      <Page>
-        Root layout
-        <br />
-        <br />
-        {children}
-      </Page>
+      <ProtectRoute>
+        <Page>
+          Root layout
+          <br />
+          <br />
+          {children}
+        </Page>
+      </ProtectRoute>
     </SessionProvider>
   );
 }
