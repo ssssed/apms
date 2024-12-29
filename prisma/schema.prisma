@@ -18,6 +18,14 @@ enum Role {
   USER
 }
 
+enum ProjectStatus {
+  BACKLOG
+  IN_PROGRESS
+  TESTING
+  REALISED
+  REJECTED
+}
+
 model User {
   id       Int      @id @default(autoincrement())
   role     Role     @default(USER)
@@ -30,6 +38,7 @@ model User {
 
   tasks       Task[]
   TaskComment TaskComment[]
+  Project     Project[]
 
   @@map("users")
 }
@@ -45,11 +54,16 @@ model Tag {
 }
 
 model Project {
-  id          Int     @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String
   description String?
+  status      ProjectStatus @default(BACKLOG)
+  createAt    DateTime      @default(now())
 
-  tags Tag[] @relation("ProjectTags")
+  User     User?  @relation(fields: [authorId], references: [id])
+  authorId Int?   @map("author_id")
+  tags     Tag[]  @relation("ProjectTags")
+  Task     Task[]
 
   @@map("projects")
 }
@@ -91,7 +105,12 @@ model Task {
   status      TaskStatus
   priority    Int
   order       Int
+  updatedAt   DateTime   @default(now()) @map("updated_at")
+  createAt    DateTime   @default(now()) @map("create_at")
+  endAt       DateTime   @default(dbgenerated("(CURRENT_DATE + INTERVAL '14 days')")) @map("end_at")
 
+  Project     Project?      @relation(fields: [projectId], references: [id])
+  projectId   Int?          @map("project_id")
   User        User?         @relation(fields: [assignId], references: [id])
   assignId    Int?          @map("assign_id")
   TaskComment TaskComment[]

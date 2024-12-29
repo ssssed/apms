@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: ["*"], // Разрешить загрузку изображений с любых доменов
+  },
 };
 
 export default nextConfig;

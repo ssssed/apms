@@ -1,0 +1,18 @@
+.container {
+  @apply flex flex-col gap-8 max-w-[717px];
+}
+
+.sideContent {
+  @apply flex flex-col gap-8;
+}
+
+@media screen and (width <= 1418px) {
+  .container {
+    max-width: none;
+  }
+
+  .sideContent {
+    width: 100%;
+    flex-direction: row;
+  }
+}

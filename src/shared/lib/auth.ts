@@ -43,8 +43,9 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
+        for (const key of Object.keys(user)) {
+          token[key] = user[key as keyof typeof user];
+        }
       }
       return token;
     },
@@ -54,6 +55,9 @@ export const authOptions: AuthOptions = {
           ...session.user,
           id: token.id,
           role: token.role,
+          avatar: token.avatar,
+          name: token.name,
+          email: token.name,
         };
       }
       return session;

@@ -19,6 +19,7 @@ const typographyCva = cva("leading-none", {
       m: "text-base",
       sm: "text-sm",
       lg: "text-lg",
+      xl: "text-xl",
       "2xl": "text-2xl",
       title: "text-[42px]",
     },

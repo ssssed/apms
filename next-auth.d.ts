@@ -3,10 +3,10 @@ import { DefaultSession, DefaultUser } from "next-auth";
 
 declare module "next-auth" {
   interface Session {
-    user: {
-      id: string; // id теперь строка
-      role: PrismaUser["role"];
-    } & DefaultSession["user"];
+    user: Omit<PrismaUser, "id"> &
+      DefaultSession["user"] & {
+        id: string;
+      };
   }
 
   interface User extends Omit<PrismaUser, "id"> {
@@ -18,5 +18,8 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     role: Role;
+    avatar: string | null;
+    email: string;
+    name: string;
   }
 }
