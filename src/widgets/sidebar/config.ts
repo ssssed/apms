@@ -44,7 +44,7 @@ const accountItems: MenuItemType[] = [
   {
     icon: UserRoundIcon,
     label: "Профиль",
-    link: ROUTER.pages.TASKS,
+    link: ROUTER.pages.PROFILE,
   },
   {
     icon: SettingsIcon,

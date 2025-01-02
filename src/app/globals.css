@@ -71,3 +71,13 @@ body {
     @apply bg-background text-foreground bg-neutral-50;
   }
 }
+
+[contenteditable="true"] {
+  min-height: 200px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 16px;
+  line-height: 1.5;
+}
