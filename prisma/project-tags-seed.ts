@@ -1,34 +1,40 @@
 import { PrismaClient } from "@prisma/client";
+import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
 
-const projectIds = [1, 2, 3];
-
 // Функция для генерации случайного цвета в формате HEX
 function getRandomColor() {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+  return faker.color.rgb(); // Генерирует случайный RGB-цвет в формате HEX
 }
 
-// Основная логика создания тегов для проектов
+// Основная логика создания тегов для всех проектов
 async function createTagsForProjects() {
   try {
-    // Для каждого проекта с id из массива projectIds создаем тег
-    const tagPromises = projectIds.map((projectId) =>
-      prisma.tag.create({
-        data: {
-          name: `Tag-${projectId}`, // Короткое название тега
-          color: getRandomColor(), // Случайный цвет
-          projects: {
-            connect: { id: projectId }, // Связываем тег с проектом
+    // Получаем все проекты из базы данных
+    const projects = await prisma.project.findMany();
+
+    if (projects.length === 0) {
+      console.log("Нет проектов для добавления тегов.");
+      return;
+    }
+
+    const tagPromises = projects.flatMap((project) => {
+      // Для каждого проекта генерируем от 0 до 2 случайных тегов
+      const numTags = faker.number.int({ min: 0, max: 2 });
+
+      return Array.from({ length: numTags }, () =>
+        prisma.tag.create({
+          data: {
+            name: faker.word.adjective(), // Случайное название тега
+            color: getRandomColor(), // Случайный цвет
+            projects: {
+              connect: { id: project.id }, // Связываем тег с проектом
+            },
           },
-        },
-      })
-    );
+        })
+      );
+    });
 
     // Ждем выполнения всех промисов
     const tags = await Promise.all(tagPromises);
@@ -36,6 +42,8 @@ async function createTagsForProjects() {
     console.log("Теги успешно созданы:", tags);
   } catch (error) {
     console.error("Ошибка при создании тегов:", error);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 

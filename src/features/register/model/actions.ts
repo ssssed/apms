@@ -5,7 +5,7 @@ import { RegisterFormType } from "./schema";
 
 export const registerAction = async (data: RegisterFormType) => {
   console.log(data);
-  const { email, password, name } = data;
+  const { email, password, firstName, lastName } = data;
 
   const candidate = await prisma.user.findUnique({
     where: {
@@ -23,7 +23,8 @@ export const registerAction = async (data: RegisterFormType) => {
   await prisma.user.create({
     data: {
       email,
-      name,
+      firstName,
+      lastName,
       password: hashPassword,
     },
   });

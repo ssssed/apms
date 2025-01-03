@@ -15,11 +15,7 @@ declare module "next-auth" {
 }
 
 declare module "next-auth/jwt" {
-  interface JWT {
+  interface JWT extends Omit<PrismaUser, "password"> {
     id: string;
-    role: Role;
-    avatar: string | null;
-    email: string;
-    name: string;
   }
 }

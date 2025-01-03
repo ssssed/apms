@@ -1,15 +1,16 @@
+import { moment } from "~/shared/lib/time";
+
 export function getSprintPeriod() {
-  const now = new Date();
+  const today = moment();
 
-  // Найдем дату понедельника текущей недели
-  const dayOfWeek = now.getDay();
-  const diffToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Если воскресенье, то разница 6, иначе текущий день минус 1
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - diffToMonday); // Устанавливаем день как понедельник
+  // Определяем текущий понедельник (начало текущей недели)
+  const sprintStart = today.clone().startOf("isoWeek");
 
-  // Устанавливаем конец спринта (через 14 дней)
-  const sprintEnd = new Date(monday);
-  sprintEnd.setDate(monday.getDate() + 14); // Добавляем 14 дней к понедельнику
+  // Определяем окончание двухнедельного спринта (воскресенье следующей недели)
+  const sprintEnd = sprintStart.clone().add(2, "weeks").subtract(1, "day");
 
-  return { start: monday, end: sprintEnd };
+  return {
+    start: new Date(sprintStart.format("YYYY-MM-DD")),
+    end: new Date(sprintEnd.format("YYYY-MM-DD")),
+  };
 }

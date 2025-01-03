@@ -27,14 +27,17 @@ enum ProjectStatus {
 }
 
 model User {
-  id       Int      @id @default(autoincrement())
-  role     Role     @default(USER)
-  name     String
-  email    String   @unique
-  password String
-  avatar   String?
-  createAt DateTime @default(now()) @map("create_at")
-  updateAt DateTime @updatedAt @map("update_at")
+  id          Int      @id @default(autoincrement())
+  role        Role     @default(USER)
+  firstName   String   @map("first_name")
+  lastName    String   @map("last_name")
+  email       String   @unique
+  password    String
+  tel         String?
+  displayRole String?  @map("dispay_role")
+  avatar      String?
+  createAt    DateTime @default(now()) @map("create_at")
+  updateAt    DateTime @updatedAt @map("update_at")
 
   tasks       Task[]
   TaskComment TaskComment[]

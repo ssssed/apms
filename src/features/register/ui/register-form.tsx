@@ -25,7 +25,8 @@ export const RegisterForm = () => {
     mode: "onChange",
     defaultValues: {
       email: "",
-      name: "",
+      firstName: "",
+      lastName: "",
       password: "",
     },
     resolver: zodResolver(RegisterSchema),
@@ -68,7 +69,7 @@ export const RegisterForm = () => {
         />
         <FormField
           control={form.control}
-          name="name"
+          name="firstName"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
@@ -78,6 +79,23 @@ export const RegisterForm = () => {
               </FormLabel>
               <FormControl>
                 <Input placeholder="Введите ваше имя" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                <Typography weight={"bold"} className="leading-[23px]">
+                  Фамилия
+                </Typography>
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="Введите вашу фамилию" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

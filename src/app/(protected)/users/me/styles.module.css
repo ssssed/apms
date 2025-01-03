@@ -1,0 +1,10 @@
+.section {
+  padding-top: 212px;
+  padding-bottom: 40px;
+  background-image: url("../../../../shared/assets/account-bg.svg");
+  background-repeat: no-repeat;
+  background-position: center top 32px;
+  display: grid;
+  grid-template-columns: 25% 1fr;
+  gap: 32px;
+}

@@ -28,16 +28,14 @@ export const UsersList = async () => {
           <div key={user.id} className="flex gap-2 items-center">
             <Avatar>
               <AvatarFallback>
-                {user.name
-                  ?.split(" ")
-                  .map((el) => el.at(0))
-                  .join("")}
+                {user.firstName.at(0)}
+                {user.lastName.at(0)}
               </AvatarFallback>
-              <AvatarImage src={user.avatar ?? ""} alt={user.name} />
+              <AvatarImage src={user.avatar ?? ""} alt={user.firstName ?? ""} />
             </Avatar>
             <div className="flex flex-col">
               <Typography size={"lg"} weight={"bold"}>
-                {user.name}
+                {user.firstName} {user.lastName}
               </Typography>
               <Typography view={"blured"} size={"xs"}>
                 {user.role}

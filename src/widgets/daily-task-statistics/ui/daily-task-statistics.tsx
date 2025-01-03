@@ -12,12 +12,17 @@ export const DailyTaskStatistics = async () => {
   const userId = +session!.user.id;
   const projects = await prisma.project.findMany({
     where: {
-      //   status: ProjectStatus.IN_PROGRESS,
+      Task: {
+        some: {
+          assignId: userId, // Условие для поиска задач, назначенных пользователю
+        },
+      },
     },
+    take: 5,
     include: {
       Task: {
         where: {
-          assignId: userId,
+          assignId: userId, // Условия для задач только для этого пользователя
         },
         select: {
           id: true,
@@ -25,7 +30,6 @@ export const DailyTaskStatistics = async () => {
       },
     },
   });
-
   return (
     <Box className="flex flex-col gap-4 w-[365px] max-h-fit">
       <Typography size={"xl"} weight={"bold"}>

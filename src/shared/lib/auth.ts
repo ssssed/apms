@@ -41,7 +41,15 @@ export const authOptions: AuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      console.log("trigger", trigger);
+
+      if (trigger === "update") {
+        for (const key of Object.keys(session)) {
+          token[key] = session[key as keyof typeof session];
+        }
+      }
+
       if (user) {
         for (const key of Object.keys(user)) {
           token[key] = user[key as keyof typeof user];
@@ -53,11 +61,13 @@ export const authOptions: AuthOptions = {
       if (token) {
         session.user = {
           ...session.user,
+          ...token,
           id: token.id,
           role: token.role,
           avatar: token.avatar,
-          name: token.name,
-          email: token.name,
+          firstName: token.firstName,
+          lastName: token.lastName,
+          email: token.email!,
         };
       }
       return session;

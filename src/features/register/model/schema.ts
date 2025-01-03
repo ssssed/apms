@@ -2,7 +2,8 @@ import { z } from "zod";
 
 export const RegisterSchema = z.object({
   email: z.string().email("Введите валидный email"),
-  name: z.string(),
+  firstName: z.string(),
+  lastName: z.string(),
   password: z.string(),
 });
 

@@ -63,13 +63,11 @@ export const BoardTask: React.FC<DraggableTaskProps> = ({ task, columnId }) => {
               src={task.User.avatar ?? ""}
               width={24}
               height={24}
-              alt={task.User.name}
+              alt={task.User.firstName}
             />
             <AvatarFallback>
-              {task.User.name
-                ?.split(" ")
-                .map((el) => el.at(0))
-                .join("")}
+              {task.User.firstName.at(0)}
+              {task.User.lastName.at(0)}
             </AvatarFallback>
           </Avatar>
         </div>

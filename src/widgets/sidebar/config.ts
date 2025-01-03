@@ -49,7 +49,7 @@ const accountItems: MenuItemType[] = [
   {
     icon: SettingsIcon,
     label: "Настройки",
-    link: ROUTER.pages.CHAT,
+    link: ROUTER.pages.SETTINGS,
   },
 ];
 

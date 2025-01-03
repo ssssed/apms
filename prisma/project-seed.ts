@@ -1,4 +1,5 @@
 import { PrismaClient, TaskStatus } from "@prisma/client";
+import { faker } from "@faker-js/faker";
 
 const prisma = new PrismaClient();
 
@@ -9,17 +10,24 @@ async function createTestData() {
     },
   });
 
+  if (!user) {
+    throw new Error("User not found.");
+  }
+
+  const sprintStart = new Date("2024-12-30T00:00:00.000Z");
+  const sprintEnd = new Date("2025-01-12T00:00:00.000Z");
+
   const projects = await prisma.$transaction(
-    Array.from({ length: 5 }, (_, i) =>
+    Array.from({ length: 5 }, () =>
       prisma.project.create({
         data: {
-          name: `Project ${String.fromCharCode(65 + i)}`, // A, B, C, D, E
-          description: `Description for project ${String.fromCharCode(65 + i)}`,
+          name: faker.commerce.productName(), // Случайное имя проекта
+          description: faker.commerce.productDescription(), // Случайное описание проекта
           User: {
-            connect: { id: user!.id }, // связываем проекты с пользователем
+            connect: { id: user.id }, // Связываем проект с пользователем
           },
           Task: {
-            create: generateTasks(user!.id, i),
+            create: generateTasks(user.id, sprintStart, sprintEnd),
           },
         },
         include: {
@@ -32,36 +40,41 @@ async function createTestData() {
   console.log("Test data created:", projects);
 }
 
-function generateTasks(userId: number, projectIndex: number) {
+function generateTasks(userId: number, sprintStart: Date, sprintEnd: Date) {
+  const numTasks = faker.number.int({ min: 1, max: 5 }); // Случайное количество задач
   const today = new Date();
-  return [
-    {
-      title: `Task 1 for Project ${String.fromCharCode(65 + projectIndex)}`,
-      description: "This is a task",
-      status: TaskStatus.IN_PROGRESS, // Используем enum TaskStatus
-      priority: 1,
-      order: 1,
-      createAt: today,
-      updatedAt: new Date(today.getTime() - projectIndex * 24 * 60 * 60 * 1000), // Уменьшаем дату на N дней
-      User: {
-        connect: { id: userId },
-      },
-    },
-    {
-      title: `Task 2 for Project ${String.fromCharCode(65 + projectIndex)}`,
-      description: "This is another task",
-      status: TaskStatus.TESTING, // Используем enum TaskStatus
-      priority: 2,
-      order: 2,
-      createAt: today,
+
+  return Array.from({ length: numTasks }, (_, index) => {
+    // Генерация случайных дат начала и окончания задачи в пределах спринта
+    const createAt = faker.date.between({ from: sprintStart, to: sprintEnd }); // Создание задачи в пределах спринта
+    const endAt = faker.date.between({ from: createAt, to: sprintEnd }); // Задача заканчивается после ее создания, но до конца спринта
+
+    return {
+      title: faker.hacker.phrase(), // Случайное название задачи
+      description: faker.lorem.sentence(), // Случайное описание задачи
+      status: faker.helpers.arrayElement([
+        // Случайный статус задачи
+        TaskStatus.TODO,
+        TaskStatus.REVIEW,
+        TaskStatus.BACKLOG,
+        TaskStatus.SELECT_TO_DEVELOPMENT,
+        TaskStatus.IN_PROGRESS,
+        TaskStatus.TESTING,
+        TaskStatus.DONE,
+      ]),
+      priority: faker.number.int({ min: 0, max: 2 }), // Случайный приоритет
+      order: index + 1, // Порядок в пределах проекта
+      createAt, // Дата создания задачи
       updatedAt: new Date(
-        today.getTime() - (projectIndex + 1) * 24 * 60 * 60 * 1000
-      ), // Уменьшаем дату на N+1 дней
+        createAt.getTime() -
+          faker.number.int({ min: 0, max: 10 }) * 24 * 60 * 60 * 1000
+      ), // Случайная дата обновления, которая не выходит за рамки даты создания
+      endAt, // Дата окончания задачи
       User: {
         connect: { id: userId },
       },
-    },
-  ];
+    };
+  });
 }
 
 createTestData()
